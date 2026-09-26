@@ -1,21 +1,29 @@
 # AGENTS.md
 
-**Before starting, read `./ABOUT.md`** for the project context.
-
 ### @claude
 
-- **Role:** You are a { }.
-- **Rules:** { }.
+- **Role:** Project Manager.
+- **Rules:** Own the plan and `main`: only you merge, and you write only `docs:` and `chore:`.
 
 ### @copilot
 
-- **Role:** You are a { }.
-- **Rules:** { }.
+- **Role:** Reviewer and Tester.
+- **Rules:** Review others' branches by running their tests. Write `test/<topic>` off each reviewed `feat/<topic>`. Simplify code (`sim:`).
 
 ### @codex
 
-- **Role:** You are a { }.
-- **Rules:** { }.
+- **Role:** Coder.
+- **Rules:** Implement `feat:` and `bug:` tasks. Review Reviewer's `test:` and `sim:` branches by running their tests.
+
+---
+
+## Before Starting
+
+**Read `./ABOUT.md`** for the project context.
+
+**Shared rules live only here.** Per-agent memory and instruction files aren't shared, so any rule every agent must follow belongs in this file.
+
+**Check your team.** Run `herdr agent list` and confirm all agents are running. If one is missing, tell the user.
 
 ---
 
@@ -83,7 +91,7 @@ When configuring codespace:
 **Work as a dev team and communicate constantly**
 
 - Each agent runs in a herdr pane.
-- Communicate another agent with herdr.
+- Communicate another agent using herdr.
 
 Message another agent with:
 ```bash
@@ -102,60 +110,47 @@ When to use `--wait`:
 
 ### 2. Discuss Before Working
 
-**When a user request arrives, discuss first to define plan and goals** 
+**When a user request arrives, DISCUSS FIRST to define detailed plan and goals** 
 
 When request arrives:
-  - Splits the request into verifiable Goals, 
-  - Splits own Goal into Tasks.
-
-When start working:
-  - Independent tasks run in parallel. A dependent task waits until its dependency is merged.
-  - Send the other agent a one-line status when you start a task, when a branch is ready for review, and after you merge.
+  - All agents discuss and agree on verifiable Goals and Tasks.
+  - Project Manager assign goals and tasks based on the other agents' role.
 
 ### 3. Git & Herdr
 
-**`main` stays clean. Every change lives on own branch.**
+**One task = One Branch**
 
-- Parallel agents (or sub-agents) each get their own branch or worktree.
-- Get review from reviewer. Never merge your own unreviewed branch.
+- Parallel agents each get their own branch or worktree.
+- ONLY Project Manager merge into `main` after the codes are reviewed by Reviewer. Never merge your own unreviewed branch.
 
 Branch & worktree naming:
   - Branch: `<tag>/<topic>` using a commit tag and kebab-case topic.
   - Worktree: `.worktrees/<tag>-<topic>` inside the repo. `.worktrees/` must be listed in `.gitignore`.
 
-When Review & Verifying Diff:
-  - Run `git diff` before approving or simplifying code.
-  - Check it against Surgical Changes, and reject lingering debug lines.
-  
-Reply `APPROVE`, or:
+After reviewing, must reply `APPROVE`, or:
 ```
 REQUEST_CHANGES: <one-line reason>
 <details, file:line references>
 ```
 
-After `APPROVE`:
-  - Merge with `git merge`.
-  - Delete the merged branch and its worktree, if needed.
-  - **Never** push to a remote unless the user explicitly asks.
+- An `APPROVE` must state what you ran and checked. "Matches spec" alone is not a review.
+- Send the verdict to the Project Manager as well, so it can review and merge.
+- NEVER push to a remote unless the user explicitly asks.
 
 ### 4. Sub-agents
 
-**Utilize sub-agents. Define one sub-task per sub-agent.**
-
-When delegating:
-  - Assign one sub-task per sub-agent.
-  - Give only the sub-task, its verify check, its branch, and the relevant files.
-  - Don't delegate trivial tasks.
-
-Sub-agents:
-  - Work only on their assigned branch and worktree.
-  - No merging, no rebasing `main`, no messaging other agents, no changing the plan.
-  - Report only to their parent agent.
+**Each Agent can Actively utilize sub-agents.**
 
 Parent agents:
+  - can assign one sub-task per sub-agent.
   - Are the boss of their own sub-agents.
   - Verify every result. If it fails, retry or do it yourself.
   - Mark a task done only after verifying it yourself.
+
+Sub-agents:
+  - Work only on a branch the parent creates off its own task branch. The parent merges it back.
+  - No merging, no rebasing `main`, no messaging other agents, no changing the plan.
+  - Report only to their parent agent.
 
 ---
 
