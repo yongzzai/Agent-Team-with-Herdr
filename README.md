@@ -2,7 +2,7 @@
 
 # 🤝 AGENTS.md for Agent Squad using Herdr
 
-**Turn separate agents into one dev team.**
+**Turn separate agents into one team for ML.**
 
 </div>
 
@@ -35,3 +35,7 @@ Then fill in the `{ }` placeholders, open herdr and send a request.
 ## Test Result
 
 <img src="./git graphs.png" width="300" alt="worktree">
+
+## 🙏 Credits
+
+The **Core Principles** in `AGENTS.md` are adapted from Andrej Karpathy's guidelines for LLM coding agents, then extended for this workflow.
